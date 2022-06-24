@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head></head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<style>
+    body {
+        font-family: 'Roboto'
+    }
+
+    .mo_crud-form {
+        width: 500px;
+        height: 100px;
+        background-color: #d6dfe2;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        box-sizing: border-box;
+        border-radius: 8px;
+        color: white;
+        font-size: 20px;
+    }
+
+    .mo_crud_input {
+        flex-grow: 1;
+        height: 60px;
+        border: none;
+        padding: 0;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+        font-size: 20px;
+        padding-left: 15px;
+        color: slategray
+    }
+
+    .mo_crud_button {
+        height: 60px;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        background-color: slategray;
+        color: white;
+        border: none;
+        font-size: 20px;
+    }
+
+
+    .mo_crud-input-container{
+        margin:0 auto;display:flex;padding: 4px;box-sizing:border-box;/* padding-bottom:7px; */width: 490px;background-color:#f4f4f5;border:2px solid #a4a4a5;border-radius:16px;font-family:Quicksand,Helvetica,Arial;
+    }
+    .mo_crud-input{
+        
+                height: 47px;
+                flex-grow:1;
+                border:none;
+               padding:0px;
+                border-radius:12px;
+                box-shadow:inset 0 1px 4px rgba(0,0,0,0.15);
+                font-size: 16px;
+                padding-left:7px;
+                font-weight: 500;
+                box-sizing:border-box;
+                color: #292a3a; color:slategray; padding-left:10px; box-sizing:border-box;
+    }
+
+    .mo_crud-create-btn{
+       
+              height: 44px;
+              width: 15%;
+              background-color: #8854c0;
+              text-transform:uppercase;
+              color:white;
+              /* font-family:'Roboto'; */
+              display:flex;
+              justify-content:center;
+              align-items:center;
+              /* letter-spacing:2px; */
+              font-size: 18px;
+             margin-left:5px;
+              font-weight: 500;
+              border-radius: 12px;
+              box-shadow:0 4px 0 0 #7b4cad; cursor:pointer; border:none; width:20%; 
+    }
+
+    .mo_crud-item-container {
+        display: flex;
+        align-items: center;
+        background-color: slategray;
+        border-radius: 8px;
+        height: 60px;
+        margin-bottom: 15px;
+    }
+
+    .mo_crud-item-text {
+        color: white;
+        font-size: 1.3rem;
+        flex-grow: 1;
+        margin-left: 15px;
+    }
+
+    .mo_crud-delete-btn {
+        width: 100px;
+        height: 50px;
+        background-color: #36a3f7;
+        border-radius: 8px;
+        margin-right: 15px;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .mo_crud-edit-btn {
+        width: 100px;
+        height: 50px;
+        background-color: orange;
+        border-radius: 8px;
+        margin-right: 15px;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+    }
+    
+    
+    
+    .mo_crud-container {
+        display: flex;flex-direction: column; width:500px;
+    }
+</style>
+
+<body>
+
+    <form class="mo_crud-form" id="myform">
+        <div class="mo_crud-input-container">
+            <input class="mo_crud-input" type="text" id="myinput"  autocomplete="off"  placeholder="enter new item">
+            <button id="mybutton" class="mo_crud-create-btn" >Create</button>
+        </div>
+    </form>
+
+    <div class="mo_crud-container" id="mydiv" >
+
+
+    </div>
+
+    <script>
+
+        let myform = document.getElementById("myform")
+        let myinput = document.getElementById("myinput")
+        let mybutton = document.getElementById("mybutton")
+        let mydiv = document.getElementById("mydiv")
+
+        myform.addEventListener('submit', function (e) {
+            e.preventDefault()
+            CreateElement(myinput.value)
+            myinput.value = ""
+            myinput.focus()
+        })
+
+        function CreateElement(itemText) {
+            let mytemplate = `<div class="mo_crud-item-container"><div class="mo_crud-item-text" id="text">${itemText}</div><button class="mo_crud-delete-btn" onclick="deleteItem(this)">Sil</button> <button class="mo_crud-edit-btn" onclick="edit(this)" id="edit-me">Edit</button><div>`
+            mydiv.insertAdjacentHTML("beforeend", mytemplate)
+        }
+
+        function deleteItem(item) {
+            item.parentElement.remove()
+        }
+        function edit(item) {
+            let userinput = prompt("enter new value", item.parentElement.querySelector("#text").innerHTML)
+
+            if (userinput) {
+                item.parentElement.querySelector("#text").innerHTML = userinput
+            }
+        }
+
+
+        $(document).ready(function () {
+
+            $.getJSON("jsonData.json", function (veri) {
+
+               jsonveri=veri.map(item=>{
+                return(
+                    CreateElement(item.text)
+                )
+
+               }).join('')
+               mydiv.insertAdjacentHTML("beforeend",jsonveri)
+
+             })
+
+        })
+
+
+    </script>
+
+</body>
+
+</html>
